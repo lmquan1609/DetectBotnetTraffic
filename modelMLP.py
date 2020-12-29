@@ -28,6 +28,8 @@ PARENT_PATH = '.'
 PREFIX_PATH = f'{PARENT_PATH}/CTU-13-Dataset'
 FIGURE_PATH = f'./Figures'
 
+PREPROCESSED_PATH = 'final'
+
 TRAIN_BOT_NAMES = ['Murlo', 'Virut', 'Rbot', 'Neris', 'Rbot', 'Virut', 'Rbot']
 TEST_BOT_NAMES = ['Neris', 'Neris', 'Sogou', 'DonBot', 'Rbot', 'NSIS']
 
@@ -145,4 +147,4 @@ if __name__ == '__main__':
     plt.title('Plot of accuracy and loss')
     plt.savefig(f'{FIGURE_PATH}/Fig12.png')
 
-    model.save(f'{FIGURE_PATH}/MLPv1.h5')
+    model.save(f'{PREPROCESSED_PATH}/MLPv1.h5')
