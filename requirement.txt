@@ -1,0 +1,7 @@
+matplotlib == 3.2.2
+numpy ==  1.19.4
+pandas == 1.0.5
+seaborn == 0.10.1
+prettytable == 2.0.0
+tqdm == 4.47.0
+keras == 2.4.3
