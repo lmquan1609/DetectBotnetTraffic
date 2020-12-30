@@ -40,8 +40,12 @@ $ python EDA/basicVisualization.py
 ```
 
 ### Preprocess data
+* Generate the Min-max scaling and One-hot Encoder output files to apply in testing set
 ```
+$ python preprocessing/preprocessing.py
 $ python preprocessing/genPrepFiles.py
+```
+* Apply the Min-max scaling and One-hot Encoder output files to testing set
 $ python preprocessing/applyPrepFiles.py
 ```
 

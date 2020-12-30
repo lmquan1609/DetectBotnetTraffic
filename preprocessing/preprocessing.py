@@ -1,50 +1,55 @@
-# Utility function
-def multi_corr(col1, col2="target", df=train):
-    '''
-    This function returns correlation between 2 given features.
-    Also gives corr of the given features with "label" after applying log1p to it.
-    '''
-    corr = df[[col1, col2]].corr().iloc[0,1]
-    log_corr = df[col1].apply(np.log1p).corr(df[col2])
+import pandas as pd
+import numpy as np
 
-    print("Correlation : {}\nlog_Correlation: {}".format(corr, log_corr))
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-def corr(col1, col2="target", df=train):
-    """
-    This function returns correlation between 2 given features
-    """
-    return df[[col1, col2]].corr().iloc[0,1]
+import os
+import pickle
+import datetime
+import itertools
 
-def convertToOneClass(y):
-    if y == 1:
-        return -1
-    return 1
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 
-def plot_confusion_matrix(cm, classes,
-                          normalize=False,
-                          title='Confusion matrix',
-                          cmap=plt.cm.Blues):
-    """
-    This function prints and plots the confusion matrix.
-    Normalization can be applied by setting `normalize=True`.
-    """
-    if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1, keepdims = True)
+from utils import *
 
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+PARENT_PATH = '.'
+PREFIX_PATH = f'{PARENT_PATH}/CTU-13-Dataset'
 
-    fmt = '.2f' if normalize else 'd'
-    thresh = cm.max() / 2.
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
+def loadData(train_files):
+    dfs = []
+    for file in train_files:
+        path = os.path.join(PREFIX_PATH, file)
+        dfs.append(pd.read_csv(path))
+    all_data = pd.concat(dfs)  # Concat all to a single df
+    return all_data
 
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
+if __name__ == '__main__':
+    test_files = ['capture20110811.binetflow','capture20110810.binetflow',\
+        'capture20110816-2.binetflow','capture20110816.binetflow',\
+        'capture20110818-2.binetflow','capture20110819.binetflow']
+
+    train_files = []
+    for file in os.listdir(PREFIX_PATH):
+        if file in test_files: continue
+        train_files.append(file)
+    
+    all_data = loadData(train_files)
+
+    all_data.columns= all_data.columns.str.lower()
+
+    all_data['target'] = all_data['label'].apply(convertLabel)
+    all_data['starttime'] = pd.to_datetime(all_data['starttime'])
+
+    train, test = train_test_split(all_data, test_size=0.3, random_state=42)
+
+    train_0, train_1 = train['target'].value_counts()[0] / len(train.index), train['target'].value_counts()[1] / len(train.index)
+    test_0, test_1 = test['target'].value_counts()[0] / len(test.index), test['target'].value_counts()[1] / len(test.index)
+
+    print("In Train: there are {} % of class 0 and {} % of class 1".format(train_0, train_1))
+    print("In Test: there are {} % of class 0 and {} % of class 1".format(test_0, test_1))
+
+
+    train.to_csv(f'{PARENT_PATH}/train_alldata_EDA.csv')
+    test.to_csv(f'{PARENT_PATH}/test_alldata_EDA.csv')

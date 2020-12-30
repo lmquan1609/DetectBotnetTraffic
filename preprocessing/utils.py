@@ -27,6 +27,10 @@ def convertToOneClass(y):
         return -1
     return 1
 
+def convertLabel(sample):
+    if "Botnet" in sample: return 1
+    else: return 0
+
 def saveData(x, y, y_label, path):
     pickle.dump((x, y, y_label), open(path, 'wb'))
 
