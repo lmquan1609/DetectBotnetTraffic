@@ -27,6 +27,11 @@ The data is [The CTU-13 Dataset - A Labeled Dataset with Botnet, Normal and Back
 $ bash downloader.sh
 ```
 
+In case original CTU-13 takes up lots of storage (up to 30GB), folder with only Netflow data can be downloaded via (require `sudo apt-get install unzip`):
+```
+$ bash downloaderPruned.sh
+```
+
 ### Data visualization
 
 * All figures in report located in `Figures` folder
