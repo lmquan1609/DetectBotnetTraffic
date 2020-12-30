@@ -9,9 +9,9 @@
 
 function Downloader(){
     # Download the .tar.bz of the CTU-13 
-    !python download_gdrive.py 1XyDCTcmNIrQh_CFWCsqjR3RVyYUDKX7O CTU-13-Dataset.zip
+    python download_gdrive.py 1XyDCTcmNIrQh_CFWCsqjR3RVyYUDKX7O CTU-13-Dataset.zip
 
-    !unzip CTU-13-Dataset.zip
+    unzip CTU-13-Dataset.zip
 }
 
 function Cleanup(){
