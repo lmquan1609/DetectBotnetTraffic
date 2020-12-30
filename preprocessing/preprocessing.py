@@ -25,6 +25,25 @@ def loadData(train_files):
     all_data = pd.concat(dfs)  # Concat all to a single df
     return all_data
 
+def preprocessing(data):
+    data.columns = data.columns.str.lower()
+
+    data['target'] = data['label'].apply(convertLabel)
+    data['starttime'] = pd.to_datetime(data['starttime'])
+
+    # We replace Null value to Con 
+    data['state'] = data.state.fillna(value='CON')
+
+    # fill nan port forward 
+    data['sport'] = data.sport.fillna(method='pad')
+    data['dport'] = data.dport.fillna(method='pad')
+
+    data['stos'] = data.stos.fillna(value=0.0)
+    data['dtos'] = data.dtos.fillna(value=0.0)
+
+    data = data.drop(data[data.stos == 192.0].index)
+    return data
+
 if __name__ == '__main__':
     test_files = ['capture20110811.binetflow','capture20110810.binetflow',\
         'capture20110816-2.binetflow','capture20110816.binetflow',\
@@ -36,12 +55,8 @@ if __name__ == '__main__':
         train_files.append(file)
     
     all_data = loadData(train_files)
-
-    all_data.columns= all_data.columns.str.lower()
-
-    all_data['target'] = all_data['label'].apply(convertLabel)
-    all_data['starttime'] = pd.to_datetime(all_data['starttime'])
-
+    all_data = preprocessing(all_data)
+    
     train, test = train_test_split(all_data, test_size=0.3, random_state=42)
 
     train_0, train_1 = train['target'].value_counts()[0] / len(train.index), train['target'].value_counts()[1] / len(train.index)
