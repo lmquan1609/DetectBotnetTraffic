@@ -46,11 +46,14 @@ $ python preprocessing/preprocessing.py
 $ python preprocessing/genPrepFiles.py
 ```
 * Apply the Min-max scaling and One-hot Encoder output files to testing set
+```
 $ python preprocessing/applyPrepFiles.py
 ```
 
 ### Model
-* All model file are generated in in `final` folder
+
+* All model files are generated in in `final` folder
+
 #### Decision Tree
 ```
 $ python modelDecisionTree.py
